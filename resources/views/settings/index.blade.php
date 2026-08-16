@@ -1,7 +1,7 @@
 ﻿<x-layouts.app>
     <x-slot:title>Settings</x-slot>
 
-    <div x-data="settingsPage({ initial: @json($settings) })" class="mx-auto max-w-2xl space-y-6">
+    <div x-data='settingsPage({ initial: @json($settings) })' class="mx-auto max-w-2xl space-y-6">
 
         <div class="rounded-xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
             <h3 class="mb-1 font-semibold text-slate-800"><span class="material-icons align-middle" aria-hidden="true">storefront</span> Store Information</h3>

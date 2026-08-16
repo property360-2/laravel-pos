@@ -11,6 +11,12 @@
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
 
+html,
+body {
+    margin: 0;
+    padding: 0;
+}
+
 .material-icons {
     font-size: inherit;
     line-height: 1;

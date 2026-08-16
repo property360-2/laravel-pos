@@ -109,7 +109,7 @@ $visibleNav = array_filter($navItems, fn ($item) => ! $item['admin'] || $user->i
                 </div>
             </header>
 
-            <main class="flex-1 p-4 pb-24 sm:p-6 lg:pb-6">
+            <main class="flex-1 px-4 pb-24 sm:px-6 lg:pb-0">
                 {{ $slot }}
             </main>
 

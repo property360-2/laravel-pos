@@ -1,7 +1,7 @@
 ﻿<x-layouts.app>
     <x-slot:title>Point of Sale</x-slot>
 
-    <div x-data="posCart()" x-cloak class="flex h-[calc(100vh-8rem)] flex-col gap-4 lg:h-[calc(100vh-7rem)] lg:flex-row">
+    <div x-data="posCart()" x-cloak class="flex h-[calc(100vh-8rem)] flex-col gap-4 lg:h-[calc(100vh-4rem)] lg:flex-row">
 
         <div class="flex min-h-0 flex-1 flex-col rounded-xl bg-white shadow-sm ring-1 ring-slate-200">
             <div class="flex flex-col gap-3 border-b border-slate-200 p-4 sm:flex-row">
