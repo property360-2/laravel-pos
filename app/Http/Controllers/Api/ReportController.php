@@ -9,6 +9,7 @@ use App\Models\Transaction;
 use App\Models\TransactionItem;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 class ReportController extends Controller
 {
@@ -48,6 +49,58 @@ class ReportController extends Controller
             ->get();
 
         return response()->json($bestSelling);
+    }
+
+    public function salesTrend(Request $request): JsonResponse
+    {
+        [$start, $end] = $this->dateRange($request);
+
+        $period = Carbon::parse($start ?? now()->startOfMonth())
+            ->toPeriod($end ?? now()->endOfMonth(), 1, 'day');
+
+        if ($period->count() > 366) {
+            return response()->json(['message' => 'Date range cannot exceed 366 days.'], 422);
+        }
+
+        $rows = Transaction::query()
+            ->selectRaw('DATE(created_at) as date, SUM(total) as revenue, COUNT(*) as transactions')
+            ->when($start, fn ($q) => $q->whereDate('created_at', '>=', $start))
+            ->when($end, fn ($q) => $q->whereDate('created_at', '<=', $end))
+            ->groupBy('date')
+            ->orderBy('date')
+            ->get()
+            ->keyBy('date');
+
+        $trend = collect($period)->map(fn ($date) => [
+            'date' => $date->toDateString(),
+            'revenue' => (float) ($rows[$date->toDateString()]?->revenue ?? 0),
+            'transactions' => (int) ($rows[$date->toDateString()]?->transactions ?? 0),
+        ])->values();
+
+        return response()->json($trend);
+    }
+
+    public function salesByCategory(Request $request): JsonResponse
+    {
+        [$start, $end] = $this->dateRange($request);
+
+        $rows = TransactionItem::query()
+            ->join('products', 'products.id', '=', 'transaction_items.product_id')
+            ->join('categories', 'categories.id', '=', 'products.category_id')
+            ->selectRaw('categories.name as category, SUM(transaction_items.subtotal) as revenue')
+            ->whereHas('transaction', function ($q) use ($start, $end) {
+                $q->when($start, fn ($qq) => $qq->whereDate('created_at', '>=', $start))
+                    ->when($end, fn ($qq) => $qq->whereDate('created_at', '<=', $end));
+            })
+            ->groupBy('categories.name')
+            ->orderByDesc('revenue')
+            ->get()
+            ->map(fn ($row) => [
+                'category' => $row->category,
+                'revenue' => (float) $row->revenue,
+            ]);
+
+        return response()->json($rows);
     }
 
     public function lowStock(): JsonResponse

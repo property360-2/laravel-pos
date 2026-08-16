@@ -1,9 +1,11 @@
 import './bootstrap';
 
 import Alpine from 'alpinejs';
+import Chart from 'chart.js/auto';
 import posCart from './pos-cart';
 
 window.Alpine = Alpine;
+window.Chart = Chart;
 
 document.addEventListener('alpine:init', () => {
     Alpine.store('toast', {

@@ -41,6 +41,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/inventory/movements', [InventoryController::class, 'movements']);
 
     Route::get('/reports/sales-summary', [ReportController::class, 'salesSummary']);
+    Route::get('/reports/sales-trend', [ReportController::class, 'salesTrend']);
+    Route::get('/reports/sales-by-category', [ReportController::class, 'salesByCategory']);
     Route::get('/reports/best-selling', [ReportController::class, 'bestSelling']);
     Route::get('/reports/low-stock', [ReportController::class, 'lowStock']);
     Route::get('/reports/inventory-value', [ReportController::class, 'inventoryValue']);
