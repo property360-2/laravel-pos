@@ -42,9 +42,10 @@ COPY --from=frontend /app/public/build /var/www/html/public/build
 # Install PHP Production Dependencies
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
-# Set File Permissions for Storage & Cache
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
-    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+# Set File Permissions for Storage, Database & Cache
+RUN mkdir -p /var/www/html/database \
+    && chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/database \
+    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/database
 
 # Point Apache DocumentRoot to Laravel /public directory
 ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
